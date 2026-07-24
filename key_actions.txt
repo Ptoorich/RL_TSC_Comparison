@@ -1,0 +1,5 @@
+git add .
+git commit -m "brief description of what you did"
+git push
+
+Every time you sit down to work on the project: open terminal → cd to your folder → venv\Scripts\activate → start working.
