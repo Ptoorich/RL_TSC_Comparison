@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2026-07-29T14:38:51.091440+02:00 by Eclipse SUMO sumo 1.27.1
+<!-- generated on 2026-07-30T11:21:45.482324+02:00 by Eclipse SUMO sumo 1.27.1
 -->
 
 <sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
-        <net-file value="osm.net.xml.gz"/>
-        <route-files value="routes.xml"/>
-        <additional-files value="osm.poly.xml.gz,output.add.xml,Jorissen_model_two_intersection.dat.add.xml"/>
+        <net-file value="4int_osm.net.xml"/>
+        <route-files value="4int_routes.xml"/>
+        <additional-files value="osm.poly.xml.gz,osm_stops.add.xml,output.add.xml"/>
     </input>
 
     <output>
         <tripinfo-output value="tripinfos.xml"/>
+        <stop-output value="stopinfos.xml"/>
         <statistic-output value="stats.xml"/>
     </output>
 
