@@ -24,7 +24,7 @@ class SumoTSCEnv(gym.Env):
         self.num_links = len(self.link_ids)
         self.use_gui   = config.get("use_gui", False)
 
-        # ── Phase split parameters (calibrated to your real network) ───
+        # ── Phase split parameters ─────────────────────────────────────
         self.delta_s      = config.get("delta_s", 5)
         self.s_lb         = config.get("s_lb", 15)
         self.s_ub         = config.get("s_ub", 63)
@@ -54,7 +54,6 @@ class SumoTSCEnv(gym.Env):
             shape=(obs_size,),
             dtype=np.float32
         )
-        # 3 actions per intersection: 0=decrease, 1=hold, 2=increase
         self.action_space = gym.spaces.Discrete(3 * self.num_tls)
 
     # ── Decode flat action into (tl_id, delta) ─────────────────────────
@@ -67,8 +66,11 @@ class SumoTSCEnv(gym.Env):
 
     # ── Get queue lengths from SUMO ────────────────────────────────────
     def _get_queue_lengths(self):
-        return [traci.lane.getLastStepHaltingNumber(lane)
-                for lane in self.link_ids]
+        try:
+            return [traci.lane.getLastStepHaltingNumber(lane)
+                    for lane in self.link_ids]
+        except Exception:
+            return [0] * self.num_links
 
     # ── Build normalised observation vector ────────────────────────────
     def _get_observation(self):
@@ -84,43 +86,45 @@ class SumoTSCEnv(gym.Env):
 
     # ── Li & Zhuang tiered reward (Equation 3) ─────────────────────────
     def _compute_reward(self):
-        total = 0.0
-        for q in self._get_queue_lengths():
-            if q <= self.q_lc:
-                total += 0.0
-            elif q <= self.q_hc:
-                total += -(self.w_l * q)
-            else:
-                total += -(self.w_cp * self.w_l * q)
-        return total
+        try:
+            total = 0.0
+            for q in self._get_queue_lengths():
+                if q <= self.q_lc:
+                    total += 0.0
+                elif q <= self.q_hc:
+                    total += -(self.w_l * q)
+                else:
+                    total += -(self.w_cp * self.w_l * q)
 
-    # ── Apply phase split change to SUMO using setProgramLogic ─────────
+            # Penalise teleports
+            teleports = traci.simulation.getStartingTeleportNumber()
+            total += -(5.0 * teleports)
+
+            return total
+        except Exception:
+            return 0.0
+
+    # ── Apply phase split change to SUMO ────────────────────────────────
     def _apply_action(self, tl_id, delta):
-        # Update internal split with bounds check
         new_split = np.clip(
             self.phase_splits[tl_id] + delta,
             self.s_lb, self.s_ub
         )
         self.phase_splits[tl_id] = float(new_split)
 
-        # Complementary green time for the other direction
         ew_green = (self.cycle_length
                     - new_split
                     - 2 * self.yellow_time
                     - self.allred_time)
 
-        # Get existing program logic to preserve phase states
         logic  = traci.trafficlight.getAllProgramLogics(tl_id)[0]
         phases = logic.phases
 
-        # Rebuild phases with updated green durations only
-        # Phase 0 = NS green, Phase 1 = NS yellow (fixed)
-        # Phase 2 = EW green, Phase 3 = EW yellow (fixed)
         new_phases = [
             traci.trafficlight.Phase(new_split, phases[0].state),
-            phases[1],                 # yellow — unchanged
-            traci.trafficlight.Phase(ew_green, phases[2].state),
-            phases[3],                 # yellow — unchanged
+            phases[1],
+            traci.trafficlight.Phase(ew_green,  phases[2].state),
+            phases[3],
         ]
 
         new_logic = traci.trafficlight.Logic(
@@ -131,16 +135,21 @@ class SumoTSCEnv(gym.Env):
         )
         traci.trafficlight.setProgramLogic(tl_id, new_logic)
 
-    # ── Reset: start a new episode ─────────────────────────────────────
+    # ── Reset: start a new episode with optional seed ──────────────────
     def reset(self, seed=None, options=None):
         super().reset(seed=seed)
+
         try:
             traci.close()
         except Exception:
             pass
 
-        binary  = "sumo-gui" if self.use_gui else "sumo"
-        cmd     = [binary, "-c", self.sumocfg, "--no-step-log", "true"]
+        binary = "sumo-gui" if self.use_gui else "sumo"
+
+        cmd = [binary, "-c", self.sumocfg, "--no-step-log", "true"]
+        if seed is not None:
+            cmd += ["--seed", str(seed)]
+
         traci.start(cmd)
 
         self.current_step = 0
@@ -154,12 +163,17 @@ class SumoTSCEnv(gym.Env):
         self._apply_action(tl_id, delta)
 
         for _ in range(self.step_length):
+            # Check if SUMO has run out of vehicles and ended early
+            if traci.simulation.getMinExpectedNumber() == 0:
+                self.current_step = self.sim_steps  # force episode to end
+                break
             traci.simulationStep()
             self.current_step += 1
 
-        obs    = self._get_observation()
-        reward = self._compute_reward()
+        obs        = self._get_observation()
+        reward     = self._compute_reward()
         terminated = self.current_step >= self.sim_steps
+
         return obs, reward, terminated, False, {}
 
     # ── Close SUMO ─────────────────────────────────────────────────────
@@ -168,4 +182,3 @@ class SumoTSCEnv(gym.Env):
             traci.close()
         except Exception:
             pass
-        
