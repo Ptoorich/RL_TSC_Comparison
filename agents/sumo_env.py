@@ -1,16 +1,18 @@
 import gymnasium as gym
 import numpy as np
 import traci
+import xml.etree.ElementTree as ET
+import os
 
 class SumoTSCEnv(gym.Env):
     """
     Custom Gymnasium environment for Traffic Signal Control.
     MDP formulation based on Li and Zhuang (2026).
 
-    State:  normalised queue length per approach lane 
+    State:  normalised queue length per approach lane
             + normalised phase split per intersection
     Action: select intersection + adjust phase split by -Δs, 0, or +Δs
-    Reward: tiered penalty based on queue length (Li & Zhuang Equation 3)
+    Reward: tiered queue penalty + optional throughput incentive
     """
 
     def __init__(self, config):
@@ -33,19 +35,29 @@ class SumoTSCEnv(gym.Env):
         self.allred_time  = config.get("allred_time", 0)
         self.init_split   = config.get("init_split", 39)
 
-        # ── Reward thresholds ──────────────────────────────────────────
-        self.q_lc  = config.get("q_lc", 5)
-        self.q_hc  = config.get("q_hc", 15)
-        self.w_l   = config.get("w_l", 1.0)
-        self.w_cp  = config.get("w_cp", 3.0)
+        # ── Reward parameters ──────────────────────────────────────────
+        self.q_lc         = config.get("q_lc", 5)
+        self.q_hc         = config.get("q_hc", 15)
+        self.w_l          = config.get("w_l", 1.0)
+        self.w_cp         = config.get("w_cp", 3.0)
+        self.w_throughput = config.get("w_throughput", 0.0)
 
         # ── Episode parameters ─────────────────────────────────────────
-        self.sim_steps    = config.get("sim_steps", 3600)
-        self.step_length  = config.get("step_length", 90)
-        self.current_step = 0
+        self.sim_steps     = config.get("sim_steps", 3600)
+        self.step_length   = config.get("step_length", 90)
+        self.current_step  = 0
+        self.episode_count = 0
 
         # ── Internal phase split tracker ───────────────────────────────
         self.phase_splits = {tl: self.init_split for tl in self.tl_ids}
+
+        # ── Step-level metric storage ──────────────────────────────────
+        # Read from env instance rather than TraCI directly
+        # to avoid connection-closed errors in evaluation scripts
+        self.last_arrived     = 0
+        self.last_teleports   = 0
+        self.mean_travel_time = 0.0
+        self.mean_delay       = 0.0
 
         # ── Gymnasium spaces ───────────────────────────────────────────
         obs_size = self.num_links + self.num_tls
@@ -84,10 +96,12 @@ class SumoTSCEnv(gym.Env):
 
         return np.array(norm_q + norm_s, dtype=np.float32)
 
-    # ── Li & Zhuang tiered reward (Equation 3) ─────────────────────────
+    # ── Reward: queue penalty + optional throughput incentive ───────────
     def _compute_reward(self):
         try:
             total = 0.0
+
+            # Li & Zhuang tiered queue penalty (Equation 3)
             for q in self._get_queue_lengths():
                 if q <= self.q_lc:
                     total += 0.0
@@ -96,13 +110,49 @@ class SumoTSCEnv(gym.Env):
                 else:
                     total += -(self.w_cp * self.w_l * q)
 
-            # Penalise teleports
+            # Throughput incentive (0.0 = disabled, used in DQN v2)
+            arrived = traci.simulation.getArrivedNumber()
+            total  += self.w_throughput * arrived
+
+            # Teleport penalty
             teleports = traci.simulation.getStartingTeleportNumber()
-            total += -(5.0 * teleports)
+            total    += -(5.0 * teleports)
 
             return total
         except Exception:
             return 0.0
+
+    # ── Parse tripinfo XML for mean travel time and delay ───────────────
+    def _parse_tripinfo(self):
+        try:
+            path = f"tripinfo_ep{self.episode_count}.xml"
+            if not os.path.exists(path):
+                return 0.0, 0.0
+
+            tree = ET.parse(path)
+            root = tree.getroot()
+
+            travel_times = []
+            delays       = []
+
+            for trip in root.findall('tripinfo'):
+                duration = trip.get('duration')
+                timeloss = trip.get('timeLoss')
+                if duration is not None:
+                    travel_times.append(float(duration))
+                if timeloss is not None:
+                    delays.append(float(timeloss))
+
+            mean_tt    = float(np.mean(travel_times)) if travel_times else 0.0
+            mean_delay = float(np.mean(delays))       if delays       else 0.0
+
+            # Clean up file for next episode
+            os.remove(path)
+
+            return mean_tt, mean_delay
+
+        except Exception:
+            return 0.0, 0.0
 
     # ── Apply phase split change to SUMO ────────────────────────────────
     def _apply_action(self, tl_id, delta):
@@ -135,7 +185,7 @@ class SumoTSCEnv(gym.Env):
         )
         traci.trafficlight.setProgramLogic(tl_id, new_logic)
 
-    # ── Reset: start a new episode with optional seed ──────────────────
+    # ── Reset: start a new episode ──────────────────────────────────────
     def reset(self, seed=None, options=None):
         super().reset(seed=seed)
 
@@ -144,16 +194,26 @@ class SumoTSCEnv(gym.Env):
         except Exception:
             pass
 
-        binary = "sumo-gui" if self.use_gui else "sumo"
+        self.episode_count += 1
 
-        cmd = [binary, "-c", self.sumocfg, "--no-step-log", "true"]
+        binary = "sumo-gui" if self.use_gui else "sumo"
+        cmd    = [
+            binary, "-c", self.sumocfg,
+            "--no-step-log", "true",
+            "--tripinfo-output", f"tripinfo_ep{self.episode_count}.xml"
+        ]
         if seed is not None:
             cmd += ["--seed", str(seed)]
 
         traci.start(cmd)
 
-        self.current_step = 0
-        self.phase_splits = {tl: self.init_split for tl in self.tl_ids}
+        # Reset all trackers
+        self.current_step     = 0
+        self.last_arrived     = 0
+        self.last_teleports   = 0
+        self.mean_travel_time = 0.0
+        self.mean_delay       = 0.0
+        self.phase_splits     = {tl: self.init_split for tl in self.tl_ids}
 
         return self._get_observation(), {}
 
@@ -162,10 +222,12 @@ class SumoTSCEnv(gym.Env):
         tl_id, delta = self._decode_action(action)
         self._apply_action(tl_id, delta)
 
+        self.last_arrived   = 0
+        self.last_teleports = 0
+
         for _ in range(self.step_length):
-            # Check if SUMO has run out of vehicles and ended early
             if traci.simulation.getMinExpectedNumber() == 0:
-                self.current_step = self.sim_steps  # force episode to end
+                self.current_step = self.sim_steps
                 break
             traci.simulationStep()
             self.current_step += 1
@@ -173,6 +235,21 @@ class SumoTSCEnv(gym.Env):
         obs        = self._get_observation()
         reward     = self._compute_reward()
         terminated = self.current_step >= self.sim_steps
+
+        # Capture step metrics before potentially closing connection
+        try:
+            self.last_arrived   = traci.simulation.getArrivedNumber()
+            self.last_teleports = traci.simulation.getStartingTeleportNumber()
+        except Exception:
+            pass
+
+        # Parse tripinfo at episode end for travel time and delay
+        if terminated:
+            try:
+                traci.close()
+            except Exception:
+                pass
+            self.mean_travel_time, self.mean_delay = self._parse_tripinfo()
 
         return obs, reward, terminated, False, {}
 
