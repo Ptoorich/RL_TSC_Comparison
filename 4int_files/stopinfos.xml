@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2026-07-31T10:55:56.434326+02:00 by Eclipse SUMO GUI 1.27.1
+<!-- generated on 2026-08-24T08:52:55.690551+02:00 by Eclipse SUMO sumo 1.27.1
 <sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
-        <net-file value="C:\Users\sihle\Desktop\WITS\SM8\MECN4035A Investigational Project\RL_TSC_Comparison\4int_files\4int_osm.net.xml"/>
-        <route-files value="C:\Users\sihle\Desktop\WITS\SM8\MECN4035A Investigational Project\RL_TSC_Comparison\4int_files\4int_routes.xml"/>
-        <additional-files value="C:\Users\sihle\Desktop\WITS\SM8\MECN4035A Investigational Project\RL_TSC_Comparison\4int_files\osm.poly.xml.gz,C:\Users\sihle\Desktop\WITS\SM8\MECN4035A Investigational Project\RL_TSC_Comparison\4int_files\osm_stops.add.xml,C:\Users\sihle\Desktop\WITS\SM8\MECN4035A Investigational Project\RL_TSC_Comparison\4int_files\output.add.xml"/>
+        <net-file value="../../4int_files/4int_osm.net.xml"/>
+        <route-files value="../../4int_files/4int_routes.xml"/>
+        <additional-files value="../../4int_files/osm.poly.xml.gz,../../4int_files/osm_stops.add.xml,../../4int_files/output.add.xml"/>
     </input>
 
     <output>
-        <tripinfo-output value="C:\Users\sihle\Desktop\WITS\SM8\MECN4035A Investigational Project\RL_TSC_Comparison\4int_files\tripinfos.xml"/>
-        <stop-output value="C:\Users\sihle\Desktop\WITS\SM8\MECN4035A Investigational Project\RL_TSC_Comparison\4int_files\stopinfos.xml"/>
-        <statistic-output value="C:\Users\sihle\Desktop\WITS\SM8\MECN4035A Investigational Project\RL_TSC_Comparison\4int_files\stats.xml"/>
+        <tripinfo-output value="tripinfo_ep782.xml"/>
+        <stop-output value="../../4int_files/stopinfos.xml"/>
+        <statistic-output value="../../4int_files/stats.xml"/>
     </output>
 
     <processing>
@@ -31,8 +31,12 @@
         <no-step-log value="true"/>
     </report>
 
+    <traci_server>
+        <remote-port value="56128"/>
+    </traci_server>
+
     <gui_only>
-        <gui-settings-file value="C:\Users\sihle\Desktop\WITS\SM8\MECN4035A Investigational Project\RL_TSC_Comparison\4int_files\osm.view.xml"/>
+        <gui-settings-file value="../../4int_files/osm.view.xml"/>
     </gui_only>
 
 </sumoConfiguration>

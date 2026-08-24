@@ -1,5 +1,19 @@
 git add .
-git commit -m "Built a simple netowork"
+git commit -m "MARL Independent Learning PPO agents to train on 2 int network up to 130k steps."
 git push
 
 Every time you sit down to work on the project: open terminal → cd to your folder → venv\Scripts\activate → start working.
+
+How to deal with the issue of teleports in sumo. How long to train for?
+
+Priority reading for where you are now:
+
+1. The Kolat et al. MARL paper — you have already read this but go back and focus specifically on their environment implementation section. You are about to build the MARL environment and understanding exactly how they structured their observation space and reward will directly inform your code.
+
+2. The van der Pol paper you uploaded — you read Chapter 3 and 4 but the multi-agent chapters are what matter most now. The max-plus coordination algorithm they use and how they handle non-stationarity between agents is directly relevant to your MARL implementation.
+
+Secondary reading worth finding:
+
+3. Stable-Baselines3 documentation — not a paper but worth reading the PPO implementation notes at stable-baselines3.readthedocs.io. Specifically the section on hyperparameter tuning — understanding what n_steps, batch_size and n_epochs actually do will help you justify your choices in your methodology chapter.
+
+4. OpenAI Gymnasium documentation — specifically the section on custom environments. You built one without reading it which worked fine, but reading it now will tell you if there are any edge cases in your implementation worth fixing before you scale to larger networks.

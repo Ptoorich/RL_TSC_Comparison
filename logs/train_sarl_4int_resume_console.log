@@ -1,0 +1,674 @@
+***Starting server on port 59374 ***
+Loading net-file from '../../4int_files/4int_osm.net.xml' ... done (39ms).
+Loading additional-files from '../../4int_files/osm.poly.xml.gz' ... done (29ms).
+Loading additional-files from '../../4int_files/osm_stops.add.xml' ... done (29ms).
+Loading additional-files from '../../4int_files/output.add.xml' ... done (33ms).
+Loading route-files incrementally from '../../4int_files/4int_routes.xml'
+Loading done.
+Simulation version 1.27.1 started with time: 0.00.
+Loading checkpoints/sarl_ppo_4int_160000_steps.zip ...
+Wrapping the env with a `Monitor` wrapper
+Wrapping the env in a DummyVecEnv.
+Resumed at step 160000; 100000 steps remaining.
+Logging to ./logs/sarl_ppo_4int_resumed_0
+Simulation ended at time: 3600.00.
+Reason: TraCI requested termination.
+Performance:
+ Duration: 12.01s
+ TraCI-Duration: 1.19s
+ Real time factor: 299.7
+ UPS: 66015.567766
+Vehicles:
+ Inserted: 1481 (Loaded: 7200)
+ Running: 250
+ Waiting: 5718
+ Teleports: 105 (Jam: 31, Yield: 61, Wrong Lane: 13)
+Statistics (avg of 1231):
+ RouteLength: 215.20
+ Speed: 8.06
+ Duration: 325.79
+ WaitingTime: 284.06
+ TimeLoss: 308.27
+ DepartDelay: 111.37
+***Starting server on port 59381 ***
+Loading net-file from '../../4int_files/4int_osm.net.xml' ... done (24ms).
+Loading additional-files from '../../4int_files/osm.poly.xml.gz' ... done (35ms).
+Loading additional-files from '../../4int_files/osm_stops.add.xml' ... done (34ms).
+Loading additional-files from '../../4int_files/output.add.xml' ... done (34ms).
+Loading route-files incrementally from '../../4int_files/4int_routes.xml'
+Loading done.
+Simulation version 1.27.1 started with time: 0.00.
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 40        |
+|    ep_rew_mean     | -5.83e+03 |
+| time/              |           |
+|    fps             | 2         |
+|    iterations      | 1         |
+|    time_elapsed    | 14        |
+|    total_timesteps | 160040    |
+----------------------------------
+Simulation ended at time: 3600.00.
+Reason: TraCI requested termination.
+Performance:
+ Duration: 11.93s
+ TraCI-Duration: 1.28s
+ Real time factor: 301.887
+ UPS: 63223.480084
+Vehicles:
+ Inserted: 1698 (Loaded: 7200)
+ Running: 209
+ Waiting: 5501
+ Teleports: 89 (Jam: 28, Yield: 55, Wrong Lane: 6)
+Statistics (avg of 1489):
+ RouteLength: 225.36
+ Speed: 7.48
+ Duration: 370.57
+ WaitingTime: 324.20
+ TimeLoss: 353.18
+ DepartDelay: 251.16
+***Starting server on port 59391 ***
+Loading net-file from '../../4int_files/4int_osm.net.xml' ... done (23ms).
+Loading additional-files from '../../4int_files/osm.poly.xml.gz' ... done (34ms).
+Loading additional-files from '../../4int_files/osm_stops.add.xml' ... done (31ms).
+Loading additional-files from '../../4int_files/output.add.xml' ... done (36ms).
+Loading route-files incrementally from '../../4int_files/4int_routes.xml'
+Loading done.
+Simulation version 1.27.1 started with time: 0.00.
+------------------------------------------
+| rollout/                |              |
+|    ep_len_mean          | 40           |
+|    ep_rew_mean          | -5.83e+03    |
+| time/                   |              |
+|    fps                  | 2            |
+|    iterations           | 2            |
+|    time_elapsed         | 26           |
+|    total_timesteps      | 160080       |
+| train/                  |              |
+|    approx_kl            | 6.094575e-07 |
+|    clip_fraction        | 0            |
+|    clip_range           | 0.2          |
+|    entropy_loss         | -2.13        |
+|    explained_variance   | 0.157        |
+|    learning_rate        | 0.0003       |
+|    loss                 | 4.47e+05     |
+|    n_updates            | 40000        |
+|    policy_gradient_loss | -0.000227    |
+|    value_loss           | 1.32e+06     |
+------------------------------------------
+Simulation ended at time: 3600.00.
+Reason: TraCI requested termination.
+Performance:
+ Duration: 12.50s
+ TraCI-Duration: 1.62s
+ Real time factor: 287.908
+ UPS: 59557.341651
+Vehicles:
+ Inserted: 1521 (Loaded: 7200)
+ Running: 249
+ Waiting: 5678
+ Teleports: 101 (Jam: 30, Yield: 63, Wrong Lane: 8)
+Statistics (avg of 1272):
+ RouteLength: 220.82
+ Speed: 7.76
+ Duration: 344.31
+ WaitingTime: 301.97
+ TimeLoss: 327.82
+ DepartDelay: 100.43
+***Starting server on port 59399 ***
+Loading net-file from '../../4int_files/4int_osm.net.xml' ... done (26ms).
+Loading additional-files from '../../4int_files/osm.poly.xml.gz' ... done (33ms).
+Loading additional-files from '../../4int_files/osm_stops.add.xml' ... done (32ms).
+Loading additional-files from '../../4int_files/output.add.xml' ... done (32ms).
+Loading route-files incrementally from '../../4int_files/4int_routes.xml'
+Loading done.
+Simulation version 1.27.1 started with time: 0.00.
+------------------------------------------
+| rollout/                |              |
+|    ep_len_mean          | 40           |
+|    ep_rew_mean          | -5.83e+03    |
+| time/                   |              |
+|    fps                  | 2            |
+|    iterations           | 3            |
+|    time_elapsed         | 40           |
+|    total_timesteps      | 160120       |
+| train/                  |              |
+|    approx_kl            | 5.662441e-07 |
+|    clip_fraction        | 0            |
+|    clip_range           | 0.2          |
+|    entropy_loss         | -2.03        |
+|    explained_variance   | 0.548        |
+|    learning_rate        | 0.0003       |
+|    loss                 | 3.11e+05     |
+|    n_updates            | 40010        |
+|    policy_gradient_loss | -8.81e-05    |
+|    value_loss           | 8.26e+05     |
+------------------------------------------
+Simulation ended at time: 3600.00.
+Reason: TraCI requested termination.
+Performance:
+ Duration: 12.38s
+ TraCI-Duration: 1.43s
+ Real time factor: 290.721
+ UPS: 64867.156586
+Vehicles:
+ Inserted: 1513 (Loaded: 7200)
+ Running: 249
+ Waiting: 5686
+ Teleports: 109 (Jam: 27, Yield: 69, Wrong Lane: 13)
+Statistics (avg of 1264):
+ RouteLength: 215.34
+ Speed: 8.36
+ Duration: 353.58
+ WaitingTime: 310.63
+ TimeLoss: 336.20
+ DepartDelay: 85.22
+***Starting server on port 59403 ***
+Loading net-file from '../../4int_files/4int_osm.net.xml' ... done (39ms).
+Loading additional-files from '../../4int_files/osm.poly.xml.gz' ... done (29ms).
+Loading additional-files from '../../4int_files/osm_stops.add.xml' ... done (30ms).
+Loading additional-files from '../../4int_files/output.add.xml' ... done (34ms).
+Loading route-files incrementally from '../../4int_files/4int_routes.xml'
+Loading done.
+Simulation version 1.27.1 started with time: 0.00.
+-------------------------------------------
+| rollout/                |               |
+|    ep_len_mean          | 40            |
+|    ep_rew_mean          | -5.83e+03     |
+| time/                   |               |
+|    fps                  | 3             |
+|    iterations           | 4             |
+|    time_elapsed         | 53            |
+|    total_timesteps      | 160160        |
+| train/                  |               |
+|    approx_kl            | 1.1906027e-06 |
+|    clip_fraction        | 0             |
+|    clip_range           | 0.2           |
+|    entropy_loss         | -2.01         |
+|    explained_variance   | 0.809         |
+|    learning_rate        | 0.0003        |
+|    loss                 | 1.52e+05      |
+|    n_updates            | 40020         |
+|    policy_gradient_loss | -8.11e-05     |
+|    value_loss           | 5.45e+05      |
+-------------------------------------------
+Simulation ended at time: 3600.00.
+Reason: TraCI requested termination.
+Performance:
+ Duration: 13.03s
+ TraCI-Duration: 1.42s
+ Real time factor: 276.37
+ UPS: 56948.334101
+Vehicles:
+ Inserted: 1560 (Loaded: 7200)
+ Running: 212
+ Waiting: 5639
+ Teleports: 96 (Jam: 23, Yield: 65, Wrong Lane: 8)
+Statistics (avg of 1348):
+ RouteLength: 224.23
+ Speed: 7.51
+ Duration: 353.11
+ WaitingTime: 309.13
+ TimeLoss: 336.58
+ DepartDelay: 128.62
+***Starting server on port 59409 ***
+Loading net-file from '../../4int_files/4int_osm.net.xml' ... done (39ms).
+Loading additional-files from '../../4int_files/osm.poly.xml.gz' ... done (33ms).
+Loading additional-files from '../../4int_files/osm_stops.add.xml' ... done (41ms).
+Loading additional-files from '../../4int_files/output.add.xml' ... done (36ms).
+Loading route-files incrementally from '../../4int_files/4int_routes.xml'
+Loading done.
+Simulation version 1.27.1 started with time: 0.00.
+-------------------------------------------
+| rollout/                |               |
+|    ep_len_mean          | 40            |
+|    ep_rew_mean          | -5.83e+03     |
+| time/                   |               |
+|    fps                  | 2             |
+|    iterations           | 5             |
+|    time_elapsed         | 67            |
+|    total_timesteps      | 160200        |
+| train/                  |               |
+|    approx_kl            | 2.5212762e-06 |
+|    clip_fraction        | 0             |
+|    clip_range           | 0.2           |
+|    entropy_loss         | -2.14         |
+|    explained_variance   | 0.0253        |
+|    learning_rate        | 0.0003        |
+|    loss                 | 1.16e+06      |
+|    n_updates            | 40030         |
+|    policy_gradient_loss | -0.000436     |
+|    value_loss           | 1.6e+06       |
+-------------------------------------------
+Simulation ended at time: 3600.00.
+Reason: TraCI requested termination.
+Performance:
+ Duration: 13.21s
+ TraCI-Duration: 1.44s
+ Real time factor: 272.583
+ UPS: 57565.230560
+Vehicles:
+ Inserted: 1511 (Loaded: 7200)
+ Running: 251
+ Waiting: 5688
+ Teleports: 104 (Jam: 29, Yield: 70, Wrong Lane: 5)
+Statistics (avg of 1260):
+ RouteLength: 217.50
+ Speed: 7.67
+ Duration: 376.69
+ WaitingTime: 333.60
+ TimeLoss: 359.94
+ DepartDelay: 133.60
+***Starting server on port 59413 ***
+Loading net-file from '../../4int_files/4int_osm.net.xml' ... done (35ms).
+Loading additional-files from '../../4int_files/osm.poly.xml.gz' ... done (34ms).
+Loading additional-files from '../../4int_files/osm_stops.add.xml' ... done (36ms).
+Loading additional-files from '../../4int_files/output.add.xml' ... done (36ms).
+Loading route-files incrementally from '../../4int_files/4int_routes.xml'
+Loading done.
+Simulation version 1.27.1 started with time: 0.00.
+-------------------------------------------
+| rollout/                |               |
+|    ep_len_mean          | 40            |
+|    ep_rew_mean          | -5.83e+03     |
+| time/                   |               |
+|    fps                  | 2             |
+|    iterations           | 6             |
+|    time_elapsed         | 80            |
+|    total_timesteps      | 160240        |
+| train/                  |               |
+|    approx_kl            | 2.1010638e-07 |
+|    clip_fraction        | 0             |
+|    clip_range           | 0.2           |
+|    entropy_loss         | -2.08         |
+|    explained_variance   | 0.688         |
+|    learning_rate        | 0.0003        |
+|    loss                 | 3.72e+05      |
+|    n_updates            | 40040         |
+|    policy_gradient_loss | 3.17e-05      |
+|    value_loss           | 7.58e+05      |
+-------------------------------------------
+Simulation ended at time: 3600.00.
+Reason: TraCI requested termination.
+Performance:
+ Duration: 12.63s
+ TraCI-Duration: 1.48s
+ Real time factor: 285.126
+ UPS: 58643.988595
+Vehicles:
+ Inserted: 1598 (Loaded: 7200)
+ Running: 252
+ Waiting: 5601
+ Teleports: 99 (Jam: 29, Yield: 62, Wrong Lane: 8)
+Statistics (avg of 1346):
+ RouteLength: 224.62
+ Speed: 7.58
+ Duration: 348.68
+ WaitingTime: 304.01
+ TimeLoss: 330.64
+ DepartDelay: 107.64
+***Starting server on port 59419 ***
+Loading net-file from '../../4int_files/4int_osm.net.xml' ... done (35ms).
+Loading additional-files from '../../4int_files/osm.poly.xml.gz' ... done (40ms).
+Loading additional-files from '../../4int_files/osm_stops.add.xml' ... done (37ms).
+Loading additional-files from '../../4int_files/output.add.xml' ... done (36ms).
+Loading route-files incrementally from '../../4int_files/4int_routes.xml'
+Loading done.
+Simulation version 1.27.1 started with time: 0.00.
+-------------------------------------------
+| rollout/                |               |
+|    ep_len_mean          | 40            |
+|    ep_rew_mean          | -5.83e+03     |
+| time/                   |               |
+|    fps                  | 2             |
+|    iterations           | 7             |
+|    time_elapsed         | 94            |
+|    total_timesteps      | 160280        |
+| train/                  |               |
+|    approx_kl            | 3.3825637e-07 |
+|    clip_fraction        | 0             |
+|    clip_range           | 0.2           |
+|    entropy_loss         | -2.01         |
+|    explained_variance   | 0.0885        |
+|    learning_rate        | 0.0003        |
+|    loss                 | 8.88e+05      |
+|    n_updates            | 40050         |
+|    policy_gradient_loss | -0.000162     |
+|    value_loss           | 1.38e+06      |
+-------------------------------------------
+Simulation ended at time: 3600.00.
+Reason: TraCI requested termination.
+Performance:
+ Duration: 12.60s
+ TraCI-Duration: 1.47s
+ Real time factor: 285.737
+ UPS: 60437.733153
+Vehicles:
+ Inserted: 1696 (Loaded: 7200)
+ Running: 243
+ Waiting: 5503
+ Teleports: 83 (Jam: 17, Yield: 59, Wrong Lane: 7)
+Statistics (avg of 1453):
+ RouteLength: 229.90
+ Speed: 6.95
+ Duration: 330.79
+ WaitingTime: 284.10
+ TimeLoss: 314.66
+ DepartDelay: 165.85
+***Starting server on port 59423 ***
+Loading net-file from '../../4int_files/4int_osm.net.xml' ... done (37ms).
+Loading additional-files from '../../4int_files/osm.poly.xml.gz' ... done (33ms).
+Loading additional-files from '../../4int_files/osm_stops.add.xml' ... done (33ms).
+Loading additional-files from '../../4int_files/output.add.xml' ... done (40ms).
+Loading route-files incrementally from '../../4int_files/4int_routes.xml'
+Loading done.
+Simulation version 1.27.1 started with time: 0.00.
+-------------------------------------------
+| rollout/                |               |
+|    ep_len_mean          | 40            |
+|    ep_rew_mean          | -5.83e+03     |
+| time/                   |               |
+|    fps                  | 2             |
+|    iterations           | 8             |
+|    time_elapsed         | 107           |
+|    total_timesteps      | 160320        |
+| train/                  |               |
+|    approx_kl            | 9.4473364e-07 |
+|    clip_fraction        | 0             |
+|    clip_range           | 0.2           |
+|    entropy_loss         | -2.04         |
+|    explained_variance   | 0.75          |
+|    learning_rate        | 0.0003        |
+|    loss                 | 2.25e+05      |
+|    n_updates            | 40060         |
+|    policy_gradient_loss | -0.000101     |
+|    value_loss           | 5.43e+05      |
+-------------------------------------------
+Simulation ended at time: 3600.00.
+Reason: TraCI requested termination.
+Performance:
+ Duration: 14.66s
+ TraCI-Duration: 1.59s
+ Real time factor: 245.616
+ UPS: 50599.645221
+Vehicles:
+ Inserted: 1594 (Loaded: 7200)
+ Running: 251
+ Waiting: 5605
+ Teleports: 104 (Jam: 29, Yield: 66, Wrong Lane: 9)
+Statistics (avg of 1343):
+ RouteLength: 218.74
+ Speed: 7.94
+ Duration: 368.03
+ WaitingTime: 325.02
+ TimeLoss: 350.15
+ DepartDelay: 79.87
+***Starting server on port 59429 ***
+Loading net-file from '../../4int_files/4int_osm.net.xml' ... done (11ms).
+Loading additional-files from '../../4int_files/osm.poly.xml.gz' ... done (35ms).
+Loading additional-files from '../../4int_files/osm_stops.add.xml' ... done (38ms).
+Loading additional-files from '../../4int_files/output.add.xml' ... done (48ms).
+Loading route-files incrementally from '../../4int_files/4int_routes.xml'
+Loading done.
+Simulation version 1.27.1 started with time: 0.00.
+------------------------------------------
+| rollout/                |              |
+|    ep_len_mean          | 40           |
+|    ep_rew_mean          | -5.84e+03    |
+| time/                   |              |
+|    fps                  | 2            |
+|    iterations           | 9            |
+|    time_elapsed         | 123          |
+|    total_timesteps      | 160360       |
+| train/                  |              |
+|    approx_kl            | 3.606081e-07 |
+|    clip_fraction        | 0            |
+|    clip_range           | 0.2          |
+|    entropy_loss         | -2.05        |
+|    explained_variance   | 0.409        |
+|    learning_rate        | 0.0003       |
+|    loss                 | 3.11e+05     |
+|    n_updates            | 40070        |
+|    policy_gradient_loss | -5.86e-05    |
+|    value_loss           | 8.19e+05     |
+------------------------------------------
+Simulation ended at time: 3600.00.
+Reason: TraCI requested termination.
+Performance:
+ Duration: 16.41s
+ TraCI-Duration: 1.51s
+ Real time factor: 219.352
+ UPS: 43704.850110
+Vehicles:
+ Inserted: 1772 (Loaded: 7200)
+ Running: 230
+ Waiting: 5427
+ Teleports: 84 (Jam: 20, Yield: 58, Wrong Lane: 6)
+Statistics (avg of 1542):
+ RouteLength: 228.46
+ Speed: 6.94
+ Duration: 300.58
+ WaitingTime: 255.73
+ TimeLoss: 284.50
+ DepartDelay: 178.72
+***Starting server on port 59435 ***
+Loading net-file from '../../4int_files/4int_osm.net.xml' ... done (25ms).
+Loading additional-files from '../../4int_files/osm.poly.xml.gz' ... done (53ms).
+Loading additional-files from '../../4int_files/osm_stops.add.xml' ... done (48ms).
+Loading additional-files from '../../4int_files/output.add.xml' ... done (47ms).
+Loading route-files incrementally from '../../4int_files/4int_routes.xml'
+Loading done.
+Simulation version 1.27.1 started with time: 0.00.
+-------------------------------------------
+| rollout/                |               |
+|    ep_len_mean          | 40            |
+|    ep_rew_mean          | -5.84e+03     |
+| time/                   |               |
+|    fps                  | 2             |
+|    iterations           | 10            |
+|    time_elapsed         | 140           |
+|    total_timesteps      | 160400        |
+| train/                  |               |
+|    approx_kl            | 1.2403727e-05 |
+|    clip_fraction        | 0             |
+|    clip_range           | 0.2           |
+|    entropy_loss         | -2.02         |
+|    explained_variance   | 0.0696        |
+|    learning_rate        | 0.0003        |
+|    loss                 | 7.44e+05      |
+|    n_updates            | 40080         |
+|    policy_gradient_loss | -0.000913     |
+|    value_loss           | 1.48e+06      |
+-------------------------------------------
+Simulation ended at time: 3600.00.
+Reason: TraCI requested termination.
+Performance:
+ Duration: 24.24s
+ TraCI-Duration: 2.55s
+ Real time factor: 148.49
+ UPS: 32964.774790
+Vehicles:
+ Inserted: 1570 (Loaded: 7200)
+ Running: 263
+ Waiting: 5629
+ Teleports: 109 (Jam: 28, Yield: 73, Wrong Lane: 8)
+Statistics (avg of 1307):
+ RouteLength: 224.64
+ Speed: 7.61
+ Duration: 358.61
+ WaitingTime: 312.16
+ TimeLoss: 341.18
+ DepartDelay: 161.31
+***Starting server on port 59444 ***
+Loading net-file from '../../4int_files/4int_osm.net.xml' ... done (19ms).
+Loading additional-files from '../../4int_files/osm.poly.xml.gz' ... done (38ms).
+Loading additional-files from '../../4int_files/osm_stops.add.xml' ... done (61ms).
+Loading additional-files from '../../4int_files/output.add.xml' ... done (56ms).
+Loading route-files incrementally from '../../4int_files/4int_routes.xml'
+Loading done.
+Simulation version 1.27.1 started with time: 0.00.
+-------------------------------------------
+| rollout/                |               |
+|    ep_len_mean          | 40            |
+|    ep_rew_mean          | -5.83e+03     |
+| time/                   |               |
+|    fps                  | 2             |
+|    iterations           | 11            |
+|    time_elapsed         | 165           |
+|    total_timesteps      | 160440        |
+| train/                  |               |
+|    approx_kl            | 3.1441448e-07 |
+|    clip_fraction        | 0             |
+|    clip_range           | 0.2           |
+|    entropy_loss         | -2.1          |
+|    explained_variance   | 0.753         |
+|    learning_rate        | 0.0003        |
+|    loss                 | 2.25e+05      |
+|    n_updates            | 40090         |
+|    policy_gradient_loss | -2.75e-05     |
+|    value_loss           | 5.39e+05      |
+-------------------------------------------
+Simulation ended at time: 3600.00.
+Reason: TraCI requested termination.
+Performance:
+ Duration: 24.44s
+ TraCI-Duration: 2.81s
+ Real time factor: 147.287
+ UPS: 30406.431552
+Vehicles:
+ Inserted: 1665 (Loaded: 7200)
+ Running: 199
+ Waiting: 5534
+ Teleports: 106 (Jam: 31, Yield: 61, Wrong Lane: 14)
+Statistics (avg of 1466):
+ RouteLength: 230.49
+ Speed: 6.75
+ Duration: 344.30
+ WaitingTime: 299.04
+ TimeLoss: 326.79
+ DepartDelay: 173.51
+***Starting server on port 59454 ***
+Loading net-file from '../../4int_files/4int_osm.net.xml' ... done (26ms).
+Loading additional-files from '../../4int_files/osm.poly.xml.gz' ... done (50ms).
+Loading additional-files from '../../4int_files/osm_stops.add.xml' ... done (45ms).
+Loading additional-files from '../../4int_files/output.add.xml' ... done (44ms).
+Loading route-files incrementally from '../../4int_files/4int_routes.xml'
+Loading done.
+Simulation version 1.27.1 started with time: 0.00.
+-------------------------------------------
+| rollout/                |               |
+|    ep_len_mean          | 40            |
+|    ep_rew_mean          | -5.83e+03     |
+| time/                   |               |
+|    fps                  | 2             |
+|    iterations           | 12            |
+|    time_elapsed         | 190           |
+|    total_timesteps      | 160480        |
+| train/                  |               |
+|    approx_kl            | 2.6375055e-06 |
+|    clip_fraction        | 0             |
+|    clip_range           | 0.2           |
+|    entropy_loss         | -1.99         |
+|    explained_variance   | 0.648         |
+|    learning_rate        | 0.0003        |
+|    loss                 | 3.92e+05      |
+|    n_updates            | 40100         |
+|    policy_gradient_loss | -0.00035      |
+|    value_loss           | 6.31e+05      |
+-------------------------------------------
+Simulation ended at time: 3600.00.
+Reason: TraCI requested termination.
+Performance:
+ Duration: 25.41s
+ TraCI-Duration: 2.68s
+ Real time factor: 141.693
+ UPS: 31921.714488
+Vehicles:
+ Inserted: 1494 (Loaded: 7200)
+ Running: 258
+ Waiting: 5705
+ Teleports: 117 (Jam: 38, Yield: 71, Wrong Lane: 8)
+Statistics (avg of 1236):
+ RouteLength: 215.67
+ Speed: 7.80
+ Duration: 379.13
+ WaitingTime: 337.52
+ TimeLoss: 360.96
+ DepartDelay: 127.86
+***Starting server on port 59463 ***
+Loading net-file from '../../4int_files/4int_osm.net.xml' ... done (24ms).
+Loading additional-files from '../../4int_files/osm.poly.xml.gz' ... done (43ms).
+Loading additional-files from '../../4int_files/osm_stops.add.xml' ... done (47ms).
+Loading additional-files from '../../4int_files/output.add.xml' ... done (42ms).
+Loading route-files incrementally from '../../4int_files/4int_routes.xml'
+Loading done.
+Simulation version 1.27.1 started with time: 0.00.
+------------------------------------------
+| rollout/                |              |
+|    ep_len_mean          | 40           |
+|    ep_rew_mean          | -5.83e+03    |
+| time/                   |              |
+|    fps                  | 2            |
+|    iterations           | 13           |
+|    time_elapsed         | 217          |
+|    total_timesteps      | 160520       |
+| train/                  |              |
+|    approx_kl            | 5.841255e-07 |
+|    clip_fraction        | 0            |
+|    clip_range           | 0.2          |
+|    entropy_loss         | -1.99        |
+|    explained_variance   | 0.374        |
+|    learning_rate        | 0.0003       |
+|    loss                 | 5.7e+05      |
+|    n_updates            | 40110        |
+|    policy_gradient_loss | -0.000175    |
+|    value_loss           | 8.97e+05     |
+------------------------------------------
+Simulation ended at time: 3600.00.
+Reason: TraCI requested termination.
+Performance:
+ Duration: 25.21s
+ TraCI-Duration: 2.64s
+ Real time factor: 142.778
+ UPS: 29617.712382
+Vehicles:
+ Inserted: 1522 (Loaded: 7200)
+ Running: 231
+ Waiting: 5677
+ Teleports: 90 (Jam: 26, Yield: 59, Wrong Lane: 5)
+Statistics (avg of 1291):
+ RouteLength: 219.83
+ Speed: 7.54
+ Duration: 369.07
+ WaitingTime: 325.48
+ TimeLoss: 351.99
+ DepartDelay: 116.61
+***Starting server on port 59479 ***
+Loading net-file from '../../4int_files/4int_osm.net.xml' ... done (16ms).
+Loading additional-files from '../../4int_files/osm.poly.xml.gz' ... done (41ms).
+Loading additional-files from '../../4int_files/osm_stops.add.xml' ... done (51ms).
+Loading additional-files from '../../4int_files/output.add.xml' ... done (52ms).
+Loading route-files incrementally from '../../4int_files/4int_routes.xml'
+Loading done.
+Simulation version 1.27.1 started with time: 0.00.
+-------------------------------------------
+| rollout/                |               |
+|    ep_len_mean          | 40            |
+|    ep_rew_mean          | -5.84e+03     |
+| time/                   |               |
+|    fps                  | 2             |
+|    iterations           | 14            |
+|    time_elapsed         | 242           |
+|    total_timesteps      | 160560        |
+| train/                  |               |
+|    approx_kl            | 2.8565528e-06 |
+|    clip_fraction        | 0             |
+|    clip_range           | 0.2           |
+|    entropy_loss         | -2            |
+|    explained_variance   | 0.0246        |
+|    learning_rate        | 0.0003        |
+|    loss                 | 6.15e+05      |
+|    n_updates            | 40120         |
+|    policy_gradient_loss | -5.39e-05     |
+|    value_loss           | 1.58e+06      |
+-------------------------------------------
