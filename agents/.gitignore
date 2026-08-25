@@ -1,0 +1,10 @@
+# Temporary SUMO outputs
+tripinfo_*.xml
+2int_files/edgeData.xml
+2int_files/stats.xml
+
+# Python cache & logs
+__pycache__/
+*.pyc
+logs/
+checkpoints/
