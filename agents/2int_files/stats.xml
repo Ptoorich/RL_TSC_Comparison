@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2026-08-24T16:33:54.236934+02:00 by Eclipse SUMO sumo 1.27.1
+<!-- generated on 2026-08-25T09:15:06.783363+02:00 by Eclipse SUMO sumo 1.27.1
 <sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
@@ -10,7 +10,7 @@
     </input>
 
     <output>
-        <tripinfo-output value="tripinfo_marl_ps_ep10.xml"/>
+        <tripinfo-output value="tripinfo_marl_ps_ep2.xml"/>
         <statistic-output value="2int_files/stats.xml"/>
     </output>
 
@@ -31,12 +31,8 @@
     </report>
 
     <traci_server>
-        <remote-port value="63863"/>
+        <remote-port value="51990"/>
     </traci_server>
-
-    <random_number>
-        <seed value="9999"/>
-    </random_number>
 
     <gui_only>
         <gui-settings-file value="2int_files/osm.view.xml"/>
@@ -46,14 +42,4 @@
 -->
 
 <statistics xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/statistic_file.xsd">
-    <performance clockBegin="29177.43" clockEnd="29179.57" clockDuration="2.14" traciDuration="0.58" realTimeFactor="1686.18" vehicleUpdatesPerSecond="78333.96" personUpdatesPerSecond="0.00" begin="0.00" end="3600.00" duration="3600.00"/>
-    <vehicles loaded="7200" inserted="3567" running="43" waiting="3632"/>
-    <teleports total="0" jam="0" yield="0" wrongLane="0"/>
-    <safety collisions="0" emergencyStops="0" emergencyBraking="1"/>
-    <persons loaded="0" running="0" jammed="0"/>
-    <personTeleports total="0" abortWait="0" wrongDest="0"/>
-    <vehicleTripStatistics count="3524" routeLength="219.00" speed="9.59" duration="46.58" waitingTime="22.15" timeLoss="34.96" departDelay="225.07" departDelayWaiting="-1.00" totalTravelTime="164154.00" totalDepartDelay="793142.50"/>
-    <pedestrianStatistics number="0" routeLength="0.00" duration="0.00" timeLoss="0.00"/>
-    <rideStatistics number="0"/>
-    <transportStatistics number="0"/>
 </statistics>
