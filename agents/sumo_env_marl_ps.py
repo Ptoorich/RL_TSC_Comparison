@@ -19,6 +19,15 @@ class SumoMARLEnvPS:
 
     Observation per agent: [local_queue_lanes..., phase_split, norm_id]
     All padded to uniform size: max_local_obs + 1
+
+    Handles mixed phase structures per junction (added for 4int/6int
+    reuse): standard 4-phase junctions use the simple two-green formula;
+    any junction with more phases (e.g. the 6-phase protected-left
+    junction cluster_54994556_7161921429) uses the generalized
+    multi-stage formula with a per-junction split ceiling so the final
+    green stage never drops below yellow_time. This branch never
+    triggers on the 2-intersection network (no junction there has more
+    than 4 phases), so 2int behavior is unchanged.
     """
 
     def __init__(self, config):
@@ -155,26 +164,56 @@ class SumoMARLEnvPS:
         delta_map = {0: -self.delta_s, 1: 0, 2: self.delta_s}
         delta     = delta_map[int(action_idx)]
 
-        new_split = float(np.clip(
-            self.phase_splits[agent] + delta,
-            self.s_lb, self.s_ub
-        ))
-        self.phase_splits[agent] = new_split
-
-        ew_green = (self.cycle_length
-                    - new_split
-                    - 2 * self.yellow_time
-                    - self.allred_time)
-
         logic  = traci.trafficlight.getAllProgramLogics(tl_id)[0]
         phases = logic.phases
 
-        new_phases = [
-            traci.trafficlight.Phase(new_split, phases[0].state),
-            phases[1],
-            traci.trafficlight.Phase(ew_green,  phases[2].state),
-            phases[3],
-        ]
+        if len(phases) == 4:
+            effective_ub = self.s_ub
+        else:
+            # Multi-stage junction (e.g. 6-phase protected-left): derive
+            # fixed overhead from the junction's own phases and cap the
+            # split so the final green stage keeps >= one yellow_time.
+            middle_greens = sum(phases[i].duration
+                                for i in range(2, len(phases) - 2, 2))
+            yellows       = sum(phases[i].duration
+                                for i in range(1, len(phases), 2))
+            max_split_for_junction = (self.cycle_length
+                                       - middle_greens
+                                       - yellows
+                                       - self.allred_time
+                                       - self.yellow_time)
+            effective_ub = min(self.s_ub, max_split_for_junction)
+
+        new_split = float(np.clip(
+            self.phase_splits[agent] + delta,
+            self.s_lb, effective_ub
+        ))
+        self.phase_splits[agent] = new_split
+
+        if len(phases) == 4:
+            ew_green = (self.cycle_length
+                        - new_split
+                        - 2 * self.yellow_time
+                        - self.allred_time)
+            new_phases = [
+                traci.trafficlight.Phase(new_split, phases[0].state),
+                phases[1],
+                traci.trafficlight.Phase(ew_green,  phases[2].state),
+                phases[3],
+            ]
+        else:
+            middle_greens = sum(phases[i].duration
+                                for i in range(2, len(phases) - 2, 2))
+            yellows       = sum(phases[i].duration
+                                for i in range(1, len(phases), 2))
+            last_green    = (self.cycle_length - new_split
+                             - middle_greens - yellows - self.allred_time)
+
+            new_phases = [phases[i] for i in range(len(phases))]
+            new_phases[0] = traci.trafficlight.Phase(
+                new_split, phases[0].state)
+            new_phases[len(phases) - 2] = traci.trafficlight.Phase(
+                last_green, phases[len(phases) - 2].state)
 
         new_logic = traci.trafficlight.Logic(
             logic.programID, logic.type,
@@ -211,10 +250,7 @@ class SumoMARLEnvPS:
             pass
 
         self.episode_count += 1
-        
-        # Absolute binary path set to C:\RL_TSC\bin
-        binary = r"C:\RL_TSC\bin\sumo-gui.exe" if self.use_gui else r"C:\RL_TSC\bin\sumo.exe"
-        
+        binary = "sumo-gui" if self.use_gui else "sumo"
         cmd = [
             binary, "-c", self.sumocfg,
             "--no-step-log", "true",
@@ -239,7 +275,7 @@ class SumoMARLEnvPS:
     def step(self, actions):
         """
         actions: dict {agent_id: action_index}
-        Both agents act simultaneously before SUMO advances.
+        All agents act simultaneously before SUMO advances.
         """
         for agent, action_idx in actions.items():
             self._apply_action(agent, action_idx)
