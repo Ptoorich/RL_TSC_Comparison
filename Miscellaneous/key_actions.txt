@@ -1,6 +1,102 @@
 git add .
-git commit -m "MARL Independent Learning PPO agents to train on 2 int network up to 130k steps."
+git commit -m "6int sarl ppo 70k steps"
 git push
+
+=== Summary across 10 episodes SARL_DQN_2INT ===
+Mean reward:       -827.7 ± 30.6
+Mean avg queue:    2.58 ± 0.04 vehicles
+Mean throughput:   29.4 ± 3.1 vehicles
+Mean travel time:  58.6 ± 0.5 seconds
+Mean delay:        46.9 ± 0.5 seconds
+Mean teleports:    0.0 ± 0.0
+
+=== Summary across 10 episodes SARL_PPO_2INT===
+Mean reward:       -1138.7 ± 56.2
+Mean avg queue:    3.49 ± 0.09 vehicles
+Mean throughput:   53.7 ± 4.6 vehicles
+Mean travel time:  88.3 ± 1.0 seconds
+Mean delay:        76.5 ± 1.0 seconds
+Mean teleports:    0.0 ± 0.0
+
+=== Summary across 10 episodes SARL_PPO_6INT===
+Mean reward:       -7009.5 ± 265.8
+Mean avg queue:    5.00 ± 0.23 vehicles
+Mean throughput:   9.1 ± 1.7 vehicles
+Mean travel time:  400.0 ± 22.6 seconds
+Mean delay:        378.9 ± 22.3 seconds
+Mean teleports:    2.6 ± 1.7
+
+=== Summary across 10 episodes sarl_dqn_4int===
+Mean reward:       -5954.2 ± 82.8
+Mean avg queue:    5.36 ± 0.05 vehicles
+Mean throughput:   13.0 ± 1.9 vehicles
+Mean travel time:  344.1 ± 14.9 seconds
+Mean delay:        327.1 ± 15.0 seconds
+Mean teleports:    1.5 ± 0.9
+
+=== Summary across 10 episodes sarl_dqn_6int===
+Mean reward:       -7140.2 ± 372.7
+Mean avg queue:    5.16 ± 0.26 vehicles
+Mean throughput:   10.3 ± 1.9 vehicles
+Mean travel time:  404.9 ± 27.3 seconds
+Mean delay:        383.6 ± 26.8 seconds
+Mean teleports:    1.9 ± 1.7
+
+=== Summary across 10 episodes marl ppo ind 4int===
+Mean reward:       -5837.4 ± 151.5
+Mean avg queue:    5.43 ± 0.06 vehicles
+Mean throughput:   13.3 ± 2.8 vehicles
+Mean travel time:  352.3 ± 18.4 seconds
+Mean delay:        335.0 ± 18.6 seconds
+Mean teleports:    0.9 ± 1.0
+
+=== Summary across 10 episodes marl ppo ind 6int===
+Mean reward:       -8616.1 ± 272.4
+Mean avg queue:    6.52 ± 0.19 vehicles
+Mean throughput:   6.3 ± 2.7 vehicles
+Mean travel time:  545.4 ± 36.7 seconds
+Mean delay:        519.1 ± 35.1 seconds
+Mean teleports:    1.8 ± 1.0
+
+=== Summary across 10 episodes marl ppo ps 6int===
+Mean reward:       -6602.7 ± 82.0
+Mean avg queue:    4.89 ± 0.07 vehicles
+Mean throughput:   3.9 ± 1.6 vehicles
+Mean travel time:  385.1 ± 11.2 seconds
+Mean delay:        364.7 ± 11.1 seconds
+Mean teleports:    1.6 ± 1.1
+
+=== Summary across 10 episodes marl dqn ps 6int===
+Mean reward:       -6505.4 ± 89.7
+Mean avg queue:    4.64 ± 0.05 vehicles
+Mean throughput:   5.5 ± 1.6 vehicles
+Mean travel time:  376.3 ± 16.7 seconds
+Mean delay:        356.5 ± 16.6 seconds
+Mean teleports:    2.2 ± 1.1
+
+=== Summary across 10 episodes marl dqn ps 4int===
+Mean reward:       -5812.5 ± 127.8
+Mean avg queue:    5.45 ± 0.06 vehicles
+Mean throughput:   9.6 ± 3.3 vehicles
+Mean travel time:  323.7 ± 28.8 seconds
+Mean delay:        306.9 ± 28.3 seconds
+Mean teleports:    1.0 ± 1.1
+
+=== Summary across 10 episodes marl ppo ps 4int===
+Mean reward:       -6152.9 ± 97.9
+Mean avg queue:    5.75 ± 0.04 vehicles
+Mean throughput:   8.0 ± 2.7 vehicles
+Mean travel time:  377.0 ± 12.0 seconds
+Mean delay:        358.7 ± 11.9 seconds
+Mean teleports:    1.5 ± 1.6
+
+=== Summary across 10 episodes marl dqn ps 2int===
+Mean reward:       -528.7 ± 16.2
+Mean avg queue:    1.92 ± 0.04 vehicles
+Mean throughput:   23.7 ± 3.6 vehicles
+Mean travel time:  46.7 ± 0.2 seconds
+Mean delay:        35.1 ± 0.2 seconds
+Mean teleports:    0.0 ± 0.0
 
 Every time you sit down to work on the project: open terminal → cd to your folder → venv\Scripts\activate → start working.
 
