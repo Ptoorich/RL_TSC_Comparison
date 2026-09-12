@@ -18,6 +18,30 @@ Mean travel time:  88.3 ± 1.0 seconds
 Mean delay:        76.5 ± 1.0 seconds
 Mean teleports:    0.0 ± 0.0
 
+=== Summary across 10 episodes Marl_ppo_ind_2int===
+Mean reward:       -790.8 ± 14.3
+Mean avg queue:    2.31 ± 0.02 vehicles
+Mean throughput:   37.6 ± 4.4 vehicles
+Mean travel time:  54.2 ± 0.2 seconds
+Mean delay:        42.6 ± 0.2 seconds
+Mean teleports:    0.0 ± 0.0
+
+=== Summary across 10 episodes marl_ppo_ps_2int===
+Mean reward:       -528.7 ± 16.2
+Mean avg queue:    1.92 ± 0.04 vehicles
+Mean throughput:   23.7 ± 3.6 vehicles
+Mean travel time:  46.7 ± 0.2 seconds
+Mean delay:        35.1 ± 0.2 seconds
+Mean teleports:    0.0 ± 0.0
+
+=== Summary across 10 episodes sarl_ppo_4int===
+Reward	       −5954.2 ± 82.8
+Avg queue	5.23 ± 0.05 veh
+Throughput	13.0 ± 1.9 veh
+Travel time	344.1 ± 14.9 s
+Delay	        327.1 ± 15.0 s
+Teleports	1.5 ± 0.9
+
 === Summary across 10 episodes SARL_PPO_6INT===
 Mean reward:       -7009.5 ± 265.8
 Mean avg queue:    5.00 ± 0.23 vehicles
@@ -98,9 +122,28 @@ Mean travel time:  46.7 ± 0.2 seconds
 Mean delay:        35.1 ± 0.2 seconds
 Mean teleports:    0.0 ± 0.0
 
+= Summary across 10 episodes marl dqn ind 4int===
+Mean reward:       -5423.1 ± 96.6
+Mean avg queue:    5.27 ± 0.06 vehicles
+Mean throughput:   10.1 ± 3.3 vehicles
+Mean travel time:  313.5 ± 16.9 seconds
+Mean delay:        297.2 ± 16.7 seconds
+Mean teleports:    0.8 ± 0.7
+
+=== Summary across 10 episodes marl dqn ind 2int===
+Mean reward:       -528.7 ± 16.2
+Mean avg queue:    1.92 ± 0.04 vehicles
+Mean throughput:   23.7 ± 3.6 vehicles
+Mean travel time:  46.7 ± 0.2 seconds
+Mean delay:        35.1 ± 0.2 seconds
+Mean teleports:    0.0 ± 0.0
+
 Every time you sit down to work on the project: open terminal → cd to your folder → venv\Scripts\activate → start working.
 
 How to deal with the issue of teleports in sumo. How long to train for?
+
+git config --global user.email "calemuva@gmail.com"
+git config --global user.name "Ptoorich"
 
 Priority reading for where you are now:
 
