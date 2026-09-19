@@ -9,12 +9,12 @@ The overall experimental strategy is:
 1. Construct nested, real-world signalised networks (2, 4 and 6 intersections) imported from OpenStreetMap.
 2. Generate reproducible peak-hour traffic demand stochastically with fixed random seeds.
 3. Wrap SUMO in a custom Gymnasium environment implementing the MDP formulation of Li and Zhuang so that the state, action and reward definitions are held constant across all experiments.
-4. Train and evaluate controllers differing only in the factor under investigation (algorithm, reward function, or single- vs multi-agent architecture).
+4. Train and evaluate controllers spanning the full factorial of two learning algorithms (PPO, DQN), two controller architectures (SARL, MARL) and three network scales (2, 4, 6 intersections) — a total of **12 simulations** (Section 3.6).
 5. Evaluate every trained controller identically over ten fixed random seeds and compare network-level performance metrics.
 
 All code, configurations, trained models and logs are version-controlled in the GitHub repository `RL_TSC_Comparison`, so that an independent person can clone the repository, install the pinned dependencies and reproduce every result.
 
-**Figure 3.1 (insert): Overall system architecture** — a block diagram showing: SUMO microsimulator ↔ TraCI interface ↔ custom Gymnasium environment (`sumo_env.py` / `sumo_env_marl.py`) ↔ Stable-Baselines3 agent(s) (PPO/DQN), with TensorBoard logging, checkpoint storage (local disk + Google Drive) and Git/GitHub on the side.
+**Figure 3.1 (insert): Overall system architecture** — a block diagram showing: SUMO microsimulator ↔ TraCI interface ↔ custom Gymnasium environment (`sumo_env.py` / `sumo_env_marl_ps.py`) ↔ Stable-Baselines3 agent(s) (PPO/DQN), with TensorBoard logging, checkpoint storage and Git/GitHub on the side.
 
 ---
 
@@ -22,7 +22,7 @@ All code, configurations, trained models and logs are version-controlled in the 
 
 ### 3.2.1 Traffic microsimulator
 
-SUMO (Simulation of Urban MObility) v1.27.1 was used as the traffic microsimulator on all machines (identical version verified on both the local workstation and the cloud runtime). SUMO is a space-continuous, time-discrete car-following simulator; within it each vehicle is tracked individually, which allows queue lengths, throughputs and travel times to be measured directly rather than estimated. Key simulation parameters:
+SUMO (Simulation of Urban MObility) v1.27.1 was used as the traffic microsimulator for every run, installed identically on the university workstations used. SUMO is a space-continuous, time-discrete car-following simulator; within it each vehicle is tracked individually, which allows queue lengths, throughputs and travel times to be measured directly rather than estimated. Key simulation parameters:
 
 | Parameter | Value |
 |---|---|
@@ -54,7 +54,7 @@ A custom environment class, `SumoTSCEnv`, was developed to expose SUMO as a stan
 - enforcing the decision interval and episode horizon;
 - passing an evaluation seed to SUMO via the `--seed` command-line option at `reset()`.
 
-The environment was validated with `stable_baselines3.common.env_checker.check_env`, followed by a scripted smoke test in which a uniformly random agent acted in the environment; the test confirmed correct observation dimensionality, correct action decoding (phase splits observed changing by ±Δs), and plausible negative rewards. A second MARL variant, `SumoEnvMARL`, wraps the same simulation for two independent learners and exposes per-agent observations (zero-padded to equal length) behind a thin single-space adapter so that SB3's PPO can consume them unchanged.
+The environment was validated with `stable_baselines3.common.env_checker.check_env`, followed by a scripted smoke test in which a uniformly random agent acted in the environment; the test confirmed correct observation dimensionality, correct action decoding (phase splits observed changing by ±Δs), and plausible negative rewards. A second MARL variant, `SumoEnvMARL`, wraps the same simulation for N learners under a parameter-sharing regime: each per-agent observation (its own approach-lane queues and phase split, zero-padded to a common length, plus a one-hot intersection identifier) is fed through one shared policy network, exposed behind a thin adapter so that SB3's algorithms can consume it unchanged.
 
 **Figure 3.2 (insert): Functional block diagram of `SumoTSCEnv`** — reset(): launch SUMO with optional `--seed`; step(action): decode action → apply phase-split change → advance SUMO by decision interval → read queues → compute reward → return (obs, reward, terminated); close(): terminate TraCI connection.
 
@@ -73,6 +73,8 @@ Network construction proceeded in two phases:
 
 Each generated scenario folder was renamed to size-specific filenames to prevent cross-referencing errors (`2int.net.xml`, `2int.sumocfg`, `2int.routes.xml`; likewise for `4int.*` and `6int.*`). Each `.sumocfg` references its own net-file and route-file pair and sets `<begin value="0"/> <end value="3600"/>`.
 
+**Figure 3.3 (insert, asset `figures/osm_extract.png`): OSM map extract** — the selected Johannesburg grid (Jorissen Street / Braamfontein area) showing the nested 2-, 4- and 6-intersection selection boxes used for network extraction, annotated with street names.
+
 For the 2-intersection network (the fully characterised baseline):
 
 | Item | Value |
@@ -81,7 +83,11 @@ For the 2-intersection network (the fully characterised baseline):
 | Monitored approach lanes | 12 (all signalised approach lanes of both intersections) |
 | Existing signal program | Two-phase per intersection; cycle length 90 s = 39 s green + 6 s yellow + 39 s green + 6 s yellow |
 
-**Figure 3.3 (insert): Map extracts** — OSM screenshots of the selected Johannesburg area showing the nested 2-, 4- and 6-intersection selection boxes, annotated with street names.
+**Figure 3.4 (insert, asset `figures/network_2int.png`): 2-intersection network** — NETEDIT/SUMO-GUI rendering of the extracted topology as simulated.
+
+**Figure 3.5 (insert, asset `figures/network_4int.png`): 4-intersection network** — rendering of the nested 4-intersection extension.
+
+**Figure 3.6 (insert, asset `figures/network_6int.png`): 6-intersection network** — rendering of the full 6-intersection network.
 
 ### 3.3.3 Traffic demand generation
 
@@ -114,16 +120,13 @@ All software is free and open source; no equipment, material or tool purchases w
 | Visual Studio Code | IDE/editor | latest at time of use |
 | Git + GitHub | Version control and backup | repo `RL_TSC_Comparison` |
 
-### 3.4.2 Computing platforms
+### 3.4.2 Computing platform
 
-Two compute platforms were used; identical software versions were pinned on both to guarantee portability of results between them.
+Every one of the twelve simulations was executed on university PC laboratory workstations; no personal hardware or cloud computing was used for any reported result. This means the entire study can be reproduced on the same institutional hardware. The specification and serial number of the machine used are given in Appendix A.
 
-1. **Local workstation** — a Windows 11 laptop (specifications and serial number in Appendix A). Used for: all network construction, environment development, the SARL PPO training run, and all evaluations. Training ran on CPU (`use_gui=False` throughout for speed).
-2. **Google Colab** — free-tier cloud runtime with an NVIDIA T4 GPU, Linux 6.8.0-117-generic x86_64, running the identical SUMO 1.27.1 installation (installed per session via `apt`). Used for the DQN training runs, which exceeded practical laptop run-times. Checkpoints were synchronised to Google Drive by a background job every 10 minutes, allowing training to be resumed seamlessly across session disconnects (which occurred twice, at ~120k and ~200k steps).
+All training and evaluation ran CPU-only and headless (`sumo`, not `sumo-gui`, with `use_gui=False` throughout), allowing the long training budgets to run unattended, with checkpoints every 10 000 steps providing restart points. The interface layer between the learning code and the simulator is exclusively TraCI/TCP; no GUI rendering was used in any training or evaluation run.
 
-The interface layer between all platforms and the simulator is exclusively TraCI/TCP; no GUI rendering is used in any training or evaluation run (`sumo` headless binary, not `sumo-gui`).
-
-**Figure 3.4 (insert): Compute and data-flow diagram** — laptop (VS Code + venv) ⇄ GitHub ⇄ Google Drive ⇄ Colab (T4), with arrows showing model/checkpoint/log artefacts moving between platforms and TensorBoard reading event files locally.
+**Figure 3.7 (insert): Compute and data-flow diagram** — university PC workstation (VS Code + Python venv + SUMO + PyTorch) → training/evaluation → saved models, checkpoints and TensorBoard logs → Git/GitHub backup, with TensorBoard reading its event files on the same machine.
 
 ---
 
@@ -136,6 +139,8 @@ The Markov Decision Process follows Li and Zhuang's formulation for adaptive pha
 - per-intersection phase split: (s_j − s_lb)/(s_ub − s_lb).
 For the 2-intersection network: 12 + 2 = **14 elements**, `Box(0, 1, (14,), float32)`.
 
+In the MARL configuration this vector is decomposed per agent: each agent observes only the queue lengths of its own approach lanes and its own phase split, zero-padded to the largest lane count among that network's intersections so that all agents share one fixed-size observation, with a one-hot intersection identifier appended (following the parameter-sharing formulation of Kolat et al.). The SARL agent instead observes the full global vector.
+
 **Action.** `Discrete(3·M)`; decoded as intersection index ⌊a/3⌋ and adjustment a mod 3 ∈ {−Δs, 0, +Δs} with Δs = 5 s. For M = 2: **6 actions**. Phase splits are clamped to [s_lb, s_ub] = [15, 63] s around the commissioned initial split of 39 s, preserving the 90 s cycle length, 6 s yellow and 0 s all-red of the imported programs.
 
 **Reward.** Tiered per-lane queue penalty summed over all monitored lanes:
@@ -144,7 +149,7 @@ For the 2-intersection network: 12 + 2 = **14 elements**, `Box(0, 1, (14,), floa
               −(w_l · q_i)                        if q_lc < q_i ≤ q_hc (light congestion)
               −(w_cp · w_l · q_i)                 if q_i > q_hc        (heavy congestion)
 
-with thresholds q_lc = 5 veh, q_hc = 15 veh, link weight w_l = 1.0 and heavy-congestion multiplier w_cp = 3.0. In the third SARL configuration (DQN v2) a throughput incentive term with weight w_throughput was added to this penalty; this is the only reward modification in the study and is treated explicitly as an experimental factor.
+with thresholds q_lc = 5 veh, q_hc = 15 veh, link weight w_l = 1.0 and heavy-congestion multiplier w_cp = 3.0. 
 
 **Timing.** One decision per 90 s (one full cycle): the agent observes, adjusts the split, and SUMO advances 90 s before the next decision. An episode is therefore 3600 s / 90 s = **40 decision steps**.
 
@@ -154,39 +159,54 @@ with thresholds q_lc = 5 veh, q_hc = 15 veh, link weight w_l = 1.0 and heavy-con
 
 ### 3.6.1 Factors investigated
 
-| Experiment | Factor varied | Levels | Everything else |
+All twelve simulations share the same simulator, environment physics, demand files, reward function and training budget, and differ only in three factors:
+
+| Factor | Levels |
+|---|---|
+| Learning algorithm | PPO, DQN |
+| Controller architecture | SARL (one agent, global state, joint action) vs MARL (N agents, parameter sharing, local state + intersection index, shared global reward) |
+| Network scale | 2, 4, 6 intersections |
+
+The resulting full-factorial experiment matrix is:
+
+| Controller | 2int | 4int | 6int |
 |---|---|---|---|
-| E1 | Learning algorithm (SARL) | PPO vs DQN | Same env, MDP, network, demand, budget |
-| E2 | Reward function (SARL DQN) | Queue-only (v1) vs queue + throughput incentive (v2) | Same algorithm, env, network, demand, budget |
-| E3 | Agent architecture | SARL (single agent, global state, Discrete(6)) vs MARL (two independent PPO learners, local zero-padded states of 8 elements, Discrete(3) each, shared global reward) | Same env physics, MDP semantics, network, demand, algorithm family (PPO) |
-| E4 (planned) | Network scale | 2 → 4 → 6 intersections | Same construction pipeline and MDP rules |
+| SARL PPO | ✔ | ✔ | ✔ |
+| SARL DQN | ✔ | ✔ | ✔ |
+| MARL PPO | ✔ | ✔ | ✔ |
+| MARL DQN | ✔ | ✔ | ✔ |
+
+Each cell is one independently trained controller, giving 12 simulations in total and allowing the SARL/MARL comparison to be repeated at every network size rather than at a single scale.
 
 ### 3.6.2 Parameters held constant
 
 - Network geometry and signal program structure (cycle 90 s, yellow 6 s, all-red 0 s);
 - Demand generation procedure and route files;
 - Episode horizon (3600 s) and decision interval (90 s);
-- State definition, action semantics, Δs = 5 s, split bounds [15, 63] s, initial split 39 s;
-- Reward thresholds and weights (except where the reward itself is the factor, E2);
+- Action semantics (three discrete phase-split adjustments, Δs = 5 s), split bounds [15, 63] s and initial split 39 s;
+- Per-lane queue normalisation (q/50) and per-intersection split normalisation;
+- Reward thresholds and weights (identical reward function for every controller, SARL and MARL);
 - Evaluation protocol (Section 3.8): identical seeds, deterministic policies, identical metrics.
 
 These choices follow the supervisor's directive to keep SARL and MARL as identical as possible so that observed differences are attributable to the architecture alone.
 
 ### 3.6.3 Parameters adjusted
 
-Only the factor named in each experiment is adjusted: algorithm choice (E1), reward composition (E2), agent decomposition and observability (E3), and network size (E4). Algorithm hyperparameters are *not* tuned per-experiment beyond what is standard for each algorithm family (below), to avoid conflating tuning effort with architectural performance.
+Only the three factors above are varied; everything else is held constant. Algorithm hyperparameters are *not* tuned per experiment beyond what is standard for each algorithm family (Section 3.7), to avoid conflating tuning effort with architectural performance. The factorial structure allows the main effects of algorithm, architecture and scale to be separated, and ensures the SARL/MARL comparison is confirmed at every network size.
 
 ---
 
 ## 3.7 Training Protocol
 
-**SARL PPO (E1a).** Stable-Baselines3 PPO, `MlpPolicy`: learning rate 3×10⁻⁴, n_steps 40, batch size 10, n_epochs 10, γ = 0.99. A 10 000-step pilot run (~250 episodes) verified the pipeline end-to-end; training was then resumed from the pilot weights (`reset_num_timesteps=False`) to a total of **260 000 timesteps** (~6 500 episodes) on the local CPU. Checkpoints every 10 000 steps; TensorBoard logging of `ep_rew_mean`, loss and entropy.
+A single uniform training budget of **260 000 timesteps** (~6 500 episodes) applies to every one of the twelve simulations. Checkpoints were written every 10 000 steps for all runs, providing a common restart point should a long run be interrupted and a common basis for the results analysis.
 
-**SARL DQN v1 (E1b).** Hyperparameters informed by van der Pol's DQN formulation: learning rate 1×10⁻⁴, replay buffer 50 000, learning_starts 1 000, batch size 32, γ = 0.99, target-network update every 1 000 steps, ε-greedy exploration decaying 1.0 → 0.05 over the first 20 % of training, train_freq 4. Trained for **260 000 timesteps** (matched to PPO for fairness) on Colab (T4), resumed across two session disconnects from Drive-synced checkpoints.
+**SARL PPO (3 runs).** Stable-Baselines3 PPO, `MlpPolicy`: learning rate 3×10⁻⁴, n_steps 40, batch size 10, n_epochs 10, γ = 0.99. On the 2-intersection network an initial 10 000-step pilot run verified the pipeline end-to-end; training then resumed from the pilot weights (`reset_num_timesteps=False`) to the full 260 000-step budget. The same hyperparameters were used unchanged on the 4- and 6-intersection networks.
 
-**SARL DQN v2 (E2).** Identical to DQN v1 except the reward adds the throughput incentive; tripinfo output enabled to capture mean travel time and mean delay.
+**SARL DQN (3 runs).** Hyperparameters informed by van der Pol's DQN formulation: learning rate 1×10⁻⁴, replay buffer 50 000, learning_starts 1 000, batch size 32, γ = 0.99, target-network update every 1 000 steps, ε-greedy exploration decaying 1.0 → 0.05 over the first 20 % of training, train_freq 4. Trained on the university PC workstations and resumed from checkpoints when runs were interrupted.
 
-**MARL independent PPO (E3).** Two separate PPO models (one per intersection), identical hyperparameters to SARL PPO for comparability, driven by a custom lock-step training loop: at each decision point both agents observe their local (padded) state, act simultaneously, and both receive the same global network-wide reward. No communication and no parameter sharing — a deliberate contrast to Kolat et al.'s shared-network formulation, documented as an architectural scope decision. Training uses checkpoints every 10 000 steps with resume support (one interruption at ~60 000 steps was recovered from checkpoints).
+**MARL PPO (3 runs).** One shared PPO policy for all N agents on a network (parameter sharing, as in Kolat et al.), with agent identity encoded by the intersection index in each per-agent observation. At each decision point all agents ingest their local padded observations, select actions in parallel, and all receive the same network-wide reward before the simulation advances. Hyperparameters are identical to SARL PPO for comparability. Trained with the same checkpointing/resume regime as the other runs.
+
+**MARL DQN (3 runs).** The same parameter-sharing MARL structure driven by DQN, using the SARL DQN hyperparameters and the same lock-step, shared-global-reward training loop. Trained on the university PC workstations under the same checkpointing/resume regime.
 
 Training progress for every run is captured in TensorBoard event files; the primary convergence indicator is `rollout/ep_rew_mean`.
 
@@ -194,7 +214,7 @@ Training progress for every run is captured in TensorBoard event files; the prim
 
 ## 3.8 Evaluation Protocol
 
-Every trained controller is evaluated identically:
+All twelve trained controllers are evaluated identically:
 
 - **Repetitions:** 10 evaluation episodes per controller, using the fixed seed list `[42, 123, 256, 512, 999, 1337, 2024, 3141, 7777, 9999]`. Seeds are passed to SUMO at `reset()` so demand realisations differ between episodes but are exactly reproducible by anyone re-running the list.
 - **Policy mode:** deterministic (`model.predict(..., deterministic=True)`), i.e. no exploration noise at evaluation.
@@ -208,9 +228,9 @@ An initial evaluation with a fully deterministic route file produced zero-varian
 ## 3.9 Data Capture and Management
 
 - **Code and configs:** committed to GitHub daily (repository `RL_TSC_Comparison`), giving a full audit trail of environment changes.
-- **Models:** final models saved as `.zip` (e.g. `sarl_ppo_2int_260k.zip`); intermediate checkpoints every 10 000 steps — this also mitigates load-shedding interruptions on the local workstation.
+- **Models:** final models saved as `.zip` (e.g. `sarl_ppo_2int_260k.zip`); intermediate checkpoints every 10 000 steps provide restart points for long runs.
 - **Logs:** TensorBoard event files per run under `agents/logs/<run_name>/`, retained for supervisor review and results-chapter figures.
-- **Cloud artefacts:** Colab checkpoints background-synced to Google Drive every 10 minutes and pushed onward to GitHub after each completed run.
+- **Backups:** all models, checkpoints and logs were committed to Git/GitHub after each completed run.
 
 ---
 
@@ -232,9 +252,9 @@ Functionality of the complete chain was verified incrementally before any result
 
 | Item | Description | Identifier / Serial |
 |---|---|---|
-| Local workstation | Windows 11 laptop, CPU training | Model: ______ ; S/N: ______ ; CPU: ______ ; RAM: ______ |
-| Cloud runtime | Google Colab, NVIDIA T4 GPU | Session type: T4 (varies per session) |
-| Software: SUMO | Eclipse SUMO microsimulator | v1.27.1 (both platforms) |
+| Computing platform | University PC laboratory workstation, CPU-only training | Model: ______ ; S/N: ______ ; CPU: ______ ; RAM: ______ ; Lab/room: ______ |
+| Number of workstations used | Machines on which the 12 runs were performed | ______ |
+| Software: SUMO | Eclipse SUMO microsimulator | v1.27.1 (all workstations) |
 | Software: Python | CPython runtime in project venv | v______ (`py --version`) |
 | Libraries | gymnasium, stable-baselines3, torch, tensorboard, traci, numpy | versions per frozen `requirements.txt` (Appendix B) |
 | VCS | GitHub repository | `RL_TSC_Comparison` (URL: ______ ) |
@@ -244,17 +264,20 @@ Functionality of the complete chain was verified incrementally before any result
 1. Clone `RL_TSC_Comparison`; create venv; `pip install -r requirements.txt`.
 2. Install SUMO 1.27.1; set `SUMO_HOME`.
 3. Rebuild or reuse committed networks (`2int_files/2int.sumocfg` etc.).
-4. Train: `py train_sarl.py` (PPO), `py train_sarl_dqn.py` (DQN v1/v2), MARL script for E3 — or load committed `.zip` models.
-5. Evaluate: `py evaluate_sarl.py` with the fixed seed list; results print as mean ± σ tables and dump JSON.
+4. Train: the configuration-specific scripts (`train_*.py`) for SARL PPO, SARL DQN, MARL PPO and MARL DQN, with the network selected in each config — or load the committed `.zip` models.
+5. Evaluate: the evaluation script with the fixed seed list; results print as mean ± σ tables and dump JSON.
 
-## Appendix C — Configuration Constants (2-Intersection Baseline)
+## Appendix C — Configuration Constants per Network
 
 ```
-tl_ids        = ["30406197", "cluster_30406198_7161921427_7161921428"]
-link_ids      = 12 approach lanes (see repo config)
-cycle_length  = 90 s   yellow = 6 s   all-red = 0 s   init_split = 39 s
+# SARL MDP (L = monitored approach lanes, M = intersections)
+obs = Box(0, 1, (L + M,), float32)     # 2int: 14 elements; 4int/6int per config
+act = Discrete(3·M)                    # 2int: 6 actions; 4int/6int per config
+cycle_length = 90 s   yellow = 6 s   all-red = 0 s   init_split = 39 s
 delta_s = 5 s   s_lb = 15 s   s_ub = 63 s
-q_lc = 5 veh  q_hc = 15 veh  w_l = 1.0  w_cp = 3.0  (v2 adds w_throughput)
-sim_steps = 3600   step_length = 90   obs = Box(0,1,(14,))   act = Discrete(6)
+q_lc = 5 veh   q_hc = 15 veh   w_l = 1.0   w_cp = 3.0
+sim_steps = 3600   step_length = 90
+training_budget = 260 000 timesteps (all 12 runs, checkpoint every 10 000)
+# MARL: per-agent local obs = own lanes padded to max lane count + intersection index
 eval_seeds = [42, 123, 256, 512, 999, 1337, 2024, 3141, 7777, 9999]
 ```

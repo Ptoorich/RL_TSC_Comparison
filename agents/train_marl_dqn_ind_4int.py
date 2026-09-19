@@ -130,7 +130,7 @@ config = {
     "w_cp"         : 3.0,
     "sim_steps"    : 3600,
     "step_length"  : 90,
-    "use_gui"      : False,
+    "use_gui"      : False,  # 
 }
 
 os.makedirs("checkpoints", exist_ok=True)

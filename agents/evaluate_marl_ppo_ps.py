@@ -116,6 +116,7 @@ for ep, seed in enumerate(SEEDS):
           f"travel_time={env.mean_travel_time:.1f}s  "
           f"delay={env.mean_delay:.1f}s  "
           f"teleports={ep_teleports}")
+    print(env.phase_splits)
 
 env.close()
 
